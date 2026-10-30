@@ -88,6 +88,7 @@ public class TestOP extends LinearOpMode {
 
     FlywheelServoControlMode currentFlywheelServoControlMode;
     private boolean spinIntakeToggle;
+    private boolean spinIntakeDirectionToggle;
     private boolean shooterToggle;
     private boolean intakeToShooterDirectionToggle;
 
@@ -211,6 +212,7 @@ public class TestOP extends LinearOpMode {
         currentFlywheelServoControlMode = FlywheelServoControlMode.USER;
 
         spinIntakeToggle = false;
+        spinIntakeDirectionToggle = true;
         shooterToggle = false;
         intakeToShooterDirectionToggle = false;
 
@@ -246,23 +248,33 @@ public class TestOP extends LinearOpMode {
 
             // TODO REMOVE THIS ONCE THE STOPS ARE TUNED
             if (gamepad1.leftBumperWasPressed()) rotationLimitsApplied = !rotationLimitsApplied;
-            applyFlywheelServoPower(setFlywheelServoPower(gamepad1.dpadUpWasPressed(), gamepad1.dpadDownWasPressed(), gamepad1.dpad_left, gamepad1.dpad_right));
+            applyFlywheelServoPower(setFlywheelServoPower(/*gamepad1.dpadUpWasPressed()*/ false, /*gamepad1.dpadDownWasPressed()*/ false, gamepad1.dpad_left, gamepad1.dpad_right));
 
             if (gamepad1.bWasPressed()) shooterToggle = !shooterToggle;
-            applyShooterPower(setShooterPower(gamepad1.dpad_up, gamepad1.dpad_down));
+            applyShooterPower(setShooterPower(gamepad1.dpadUpWasPressed(), gamepad1.dpadDownWasPressed()));
 
             if (gamepad1.rightBumperWasPressed()) spinIntakeToggle = !spinIntakeToggle;
+            if (gamepad1.rightTriggerWasPressed()) spinIntakeDirectionToggle = !spinIntakeDirectionToggle;
             if (spinIntakeToggle) {
+                if (spinIntakeDirectionToggle) spinIntakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                else spinIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
                 spinIntakeMotor.setPower(1);
-                intakeToShooterMotor.setPower(1);
-                if (gamepad1.xWasPressed()) {
-                    intakeToShooterDirectionToggle = !intakeToShooterDirectionToggle;
-                    if (intakeToShooterDirectionToggle) intakeToShooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-                    else intakeToShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-                }
             } else {
                 spinIntakeMotor.setPower(0);
+            }
+
+            if (gamepad1.left_bumper || (gamepad1.left_trigger > 0)) {
+                intakeToShooterMotor.setPower(1);
+                if (gamepad1.left_bumper) intakeToShooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                else if (gamepad1.left_trigger > 0) intakeToShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            } else {
                 intakeToShooterMotor.setPower(0);
+            }
+            intakeToShooterMotor.setPower(1);
+            if (gamepad1.xWasPressed()) {
+                intakeToShooterDirectionToggle = !intakeToShooterDirectionToggle;
+                if (intakeToShooterDirectionToggle) intakeToShooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+                else intakeToShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             }
 
             telemetry.addData("Status", "the freshman bot held by rubber bands");
