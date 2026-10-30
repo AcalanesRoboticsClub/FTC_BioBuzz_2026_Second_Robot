@@ -161,7 +161,7 @@ public class TestOP extends LinearOpMode {
             } else if (rotationOffset > targetRotationOffset) {
                 netFlywheelServoPower = -0.5f;
             }
-            if ((targetRotationOffset - rotationOffset) < FLYWHEEL_AT_TARGET_THRESHOLD) currentFlywheelServoControlMode = FlywheelServoControlMode.USER;
+            if (Math.abs(targetRotationOffset - rotationOffset) < FLYWHEEL_AT_TARGET_THRESHOLD) currentFlywheelServoControlMode = FlywheelServoControlMode.USER;
         }
 
         return netFlywheelServoPower;
@@ -174,12 +174,11 @@ public class TestOP extends LinearOpMode {
         flywheelServo.setPower(Math.abs(netFlywheelServoPower));
     }
 
-    private double setShooterPower(boolean increaseSpeedHeld, boolean decreaseSpeedHeld) {
-        double netShooterPower = spinFlywheelMotor.getPower();
-        if (increaseSpeedHeld) netShooterPower = Math.max(0, Math.min(1, netShooterPower + 0.1));
-        if (decreaseSpeedHeld) netShooterPower = Math.max(0, Math.min(1, netShooterPower - 0.1));
+    private double setShooterPower(boolean increaseSpeedPressed, boolean decreaseSpeedPressed) {
+        if (increaseSpeedPressed) shooterPower = Math.min(1.0, shooterPower + 0.1);
+        if (decreaseSpeedPressed) shooterPower = Math.max(0.0, shooterPower - 0.1);
 
-        return netShooterPower;
+        return shooterPower;
     }
 
     private void applyShooterPower(double netShooterPower) {
