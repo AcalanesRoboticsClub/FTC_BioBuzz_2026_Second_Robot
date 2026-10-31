@@ -175,10 +175,11 @@ public class TestOP extends LinearOpMode {
     }
 
     private double setShooterPower(boolean increaseSpeedPressed, boolean decreaseSpeedPressed) {
-        if (increaseSpeedPressed) shooterPower = Math.min(1.0, shooterPower + 0.1);
-        if (decreaseSpeedPressed) shooterPower = Math.max(0.0, shooterPower - 0.1);
+        double netShooterPower = spinFlywheelMotor.getPower();
+        if (increaseSpeedPressed) netShooterPower = Math.max(0, Math.min(1, netShooterPower + 0.2));
+        if (decreaseSpeedPressed) netShooterPower = Math.max(0, Math.min(1, netShooterPower - 0.2));
 
-        return shooterPower;
+        return netShooterPower;
     }
 
     private void applyShooterPower(double netShooterPower) {
