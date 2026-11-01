@@ -200,7 +200,7 @@ public class TestOP extends LinearOpMode {
 
         driveMotors = new DcMotor[]{driveMotor0, driveMotor1, driveMotor2, driveMotor3};
 
-        flywheelServo = hardwareMap.crservo.get("flywheelServo");
+        //flywheelServo = hardwareMap.crservo.get("flywheelServo");
 
         wheelPowers = new double[]{ 0, 0, 0, 0 };
         shooterPower = 0.5;
@@ -248,7 +248,7 @@ public class TestOP extends LinearOpMode {
 
             // TODO REMOVE THIS ONCE THE STOPS ARE TUNED
             if (gamepad1.leftBumperWasPressed()) rotationLimitsApplied = !rotationLimitsApplied;
-            applyFlywheelServoPower(setFlywheelServoPower(/*gamepad1.dpadUpWasPressed()*/ false, /*gamepad1.dpadDownWasPressed()*/ false, gamepad1.dpad_left, gamepad1.dpad_right));
+            //applyFlywheelServoPower(setFlywheelServoPower(/*gamepad1.dpadUpWasPressed()*/ false, /*gamepad1.dpadDownWasPressed()*/ false, gamepad1.dpad_left, gamepad1.dpad_right));
 
             if (gamepad1.bWasPressed()) shooterToggle = !shooterToggle;
             applyShooterPower(setShooterPower(gamepad1.dpadUpWasPressed(), gamepad1.dpadDownWasPressed()));
@@ -284,7 +284,7 @@ public class TestOP extends LinearOpMode {
             telemetry.addData("Intake on?", spinIntakeToggle ? "Yes": "No");
             telemetry.addData("Estimated flywheel servo rotation", "%.2f", rotationOffset);
             telemetry.addData("Flywheel servo control mode", currentFlywheelServoControlMode == FlywheelServoControlMode.USER ? "User" : "Preset");
-            telemetry.addData("Flywheel servo power",flywheelServo.getPower());
+           // telemetry.addData("Flywheel servo power",flywheelServo.getPower());
             telemetry.update();
 
             lastLoop = System.nanoTime() / 1000000;
